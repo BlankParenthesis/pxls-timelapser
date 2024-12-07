@@ -534,6 +534,7 @@ pxlslog-explorer render \
 	--style normal \
 	--screenshot \
 	--dst "canvas-${CANVAS}-final.png"
+mv "canvas-${CANVAS}-final_0.png" "canvas-${CANVAS}-final.png"
 
 echo "Generating activity final image"
 pxlslog-explorer render \
@@ -542,7 +543,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style activity \
 	--screenshot \
-	--dst "c${CANVAS}_heat_0.png"
+	--dst "c${CANVAS}_heat.png"
 
 echo "Generating virgin final image"
 pxlslog-explorer render \
@@ -551,7 +552,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style virgin \
 	--screenshot \
-	--dst "c${CANVAS}_virgin_0.png"
+	--dst "c${CANVAS}_virgin.png"
 
 echo "Generating action final image"
 pxlslog-explorer render \
@@ -560,7 +561,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style action \
 	--screenshot \
-	--dst "c${CANVAS}_action_0.png"
+	--dst "c${CANVAS}_action.png"
 
 echo "Generating age final image"
 pxlslog-explorer render \
@@ -569,7 +570,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style age \
 	--screenshot \
-	--dst "c${CANVAS}_age_0.png"
+	--dst "c${CANVAS}_age.png"
 
 echo "Generating combined final image"
 pxlslog-explorer render \
@@ -578,7 +579,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style combined \
 	--screenshot \
-	--dst "c${CANVAS}_combined_0.png"
+	--dst "c${CANVAS}_combined.png"
 
 echo "Generating minutes final image"
 pxlslog-explorer render \
@@ -587,7 +588,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style minutes \
 	--screenshot \
-	--dst "c${CANVAS}_minutes_0.png"
+	--dst "c${CANVAS}_minutes.png"
 
 echo "Generating seconds final image"
 pxlslog-explorer render \
@@ -596,7 +597,7 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style seconds \
 	--screenshot \
-	--dst "c${CANVAS}_seconds_0.png"
+	--dst "c${CANVAS}_seconds.png"
 
 echo "Generating milliseconds final image"
 pxlslog-explorer render \
@@ -605,4 +606,4 @@ pxlslog-explorer render \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--style milliseconds \
 	--screenshot \
-	--dst "c${CANVAS}_milliseconds_0.png"
+	--dst "c${CANVAS}_milliseconds.png"
