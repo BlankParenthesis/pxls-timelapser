@@ -432,7 +432,7 @@ SCALESIZE="${SCALEWIDTH}x$SCALEHEIGHT"
 
 case $CODEC in
 	h264 | x264 | h265 | x265 | avc | mp4)
-		FILTERS="-sws_flags neighbor -vf scale=$SCALESIZE,pad=ceil($SCALEWIDTH/2)*2:ceil($SCALEWIDTH/2)*2"
+		FILTERS="-sws_flags neighbor -vf scale=$SCALESIZE,pad=ceil($SCALEWIDTH/2)*2:ceil($SCALEHEIGHT/2)*2"
 		CONTAINER="mp4"
 		;;
 	vp9 | av1 | webm)
