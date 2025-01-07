@@ -239,10 +239,10 @@ ENCODE=""
 case $CODEC in
 	h264 | x264 | avc | mp4)
 		case $QUALITY in
-			low)      ENCODE="-c:v libx264 -preset:v slow   -pix_fmt yuv420p -crf 32" ;;
-			medium)   ENCODE="-c:v libx264 -preset:v slow   -pix_fmt yuv420p -crf 23" ;;
-			high)     ENCODE="-c:v libx264 -preset:v slow   -pix_fmt yuv444p -crf 16 -profile:v high444" ;;
-			lossless) ENCODE="-c:v libx264 -preset:v faster -pix_fmt yuv444p -crf 0  -profile:v high444" ;;
+			low)      ENCODE="-c:v libx264 -preset:v slow   -pix_fmt yuv420p -crf 32 -profile:v baseline -movflags +faststart" ;;
+			medium)   ENCODE="-c:v libx264 -preset:v slow   -pix_fmt yuv420p -crf 23 -profile:v baseline -movflags +faststart" ;;
+			high)     ENCODE="-c:v libx264 -preset:v slow   -pix_fmt yuv444p -crf 16 -profile:v high444  -movflags +faststart" ;;
+			lossless) ENCODE="-c:v libx264 -preset:v faster -pix_fmt yuv444p -crf 0  -profile:v high444  -movflags +faststart" ;;
 			*)
 				echo "Unknown quality $QUALITY, options are [low, medium, high, lossless]"
 				exit 1
@@ -462,7 +462,7 @@ pxlslog-explorer render \
 		-video_size $SIZE \
 		-r $FRAMERATE \
 		-i pipe:0 \
-		$ENCODE_PARAMS \
+		$ENCODE \
 		-g $KEYFRAME_INTERVAL \
 		$FILTERS \
 		"c${CANVAS}_timelapse_normal.$CONTAINER" \
@@ -490,7 +490,7 @@ pxlslog-explorer render \
 		-video_size $SIZE \
 		-r $FRAMERATE \
 		-i pipe:0 \
-		$ENCODE_PARAMS \
+		$ENCODE \
 		-g $KEYFRAME_INTERVAL \
 		$FILTERS \
 		"c${CANVAS}_timelapse_heat.$CONTAINER" \
@@ -517,7 +517,7 @@ pxlslog-explorer render \
 		-video_size $SIZE \
 		-r $FRAMERATE \
 		-i pipe:0 \
-		$ENCODE_PARAMS \
+		$ENCODE \
 		-g $KEYFRAME_INTERVAL \
 		$FILTERS \
 		"c${CANVAS}_timelapse_virgin.$CONTAINER" \
