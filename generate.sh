@@ -493,7 +493,7 @@ pxlslog-explorer render \
 		$ENCODE \
 		-g $KEYFRAME_INTERVAL \
 		$FILTERS \
-		"c${CANVAS}_timelapse_heat.$CONTAINER" \
+		"c${CANVAS}_timelapse_activity.$CONTAINER" \
 		| grep --line-buffered ^frame= \
 		| awk -F '=' "{printf \"\rGenerating activity timelapse frame %s/$APPROX_FRAMES\", \$2}"
 
