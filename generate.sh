@@ -425,14 +425,16 @@ esac
 
 KEYFRAME_INTERVAL=$((5 * $FRAMERATE))
 
-pxlslog-explorer render \
+pxlslog-render \
+	--quiet \
 	--step $STEP \
 	--step-type time \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal_timelapse.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style normal \
-	| ffmpeg -hide_banner \
+	--output-format rgba \
+	normal | ffmpeg \
+		-hide_banner \
 		-loglevel error \
 		-progress pipe:1 \
 		-nostats \
@@ -453,14 +455,16 @@ pxlslog-explorer render \
 SPACING=$(echo $APPROX_FRAMES | sed 's/./ /g')
 printf "\rGenerated normal timelapse        $SPACING $SPACING\n"
 
-pxlslog-explorer render \
+pxlslog-render \
+	--quiet \
 	--step $STEP \
 	--step-type time \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_heat_timelapse.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style heat \
-	| ffmpeg -hide_banner \
+	--output-format rgba \
+	heat | ffmpeg \
+		-hide_banner \
 		-loglevel error \
 		-progress pipe:1 \
 		-nostats \
@@ -480,14 +484,16 @@ pxlslog-explorer render \
 
 printf "\rGenerated activity timelapse        $SPACING $SPACING\n"
 
-pxlslog-explorer render \
+pxlslog-render \
+	--quiet \
 	--step $STEP \
 	--step-type time \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin_timelapse.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style virgin \
-	| ffmpeg -hide_banner \
+	--output-format rgba \
+	virgin | ffmpeg \
+		-hide_banner \
 		-loglevel error \
 		-progress pipe:1 \
 		-nostats \
@@ -508,83 +514,91 @@ pxlslog-explorer render \
 printf "\rGenerated timelapse timelapse        $SPACING $SPACING\n"
 
 echo "Generating normal final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style normal \
 	--screenshot \
-	--dst "canvas-${CANVAS}-final.png"
-mv "canvas-${CANVAS}-final_0.png" "canvas-${CANVAS}-final.png"
+	--output "canvas-${CANVAS}-final.png" \
+	normal
 
 echo "Generating activity final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_activity.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style activity \
 	--screenshot \
-	--dst "c${CANVAS}_heat.png"
+	--output "c${CANVAS}_heat.png" \
+	activity
 
 echo "Generating virgin final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style virgin \
 	--screenshot \
-	--dst "c${CANVAS}_virgin.png"
+	--output "c${CANVAS}_virgin.png" \
+	virgin
 
 echo "Generating action final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_action.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style action \
 	--screenshot \
-	--dst "c${CANVAS}_action.png"
+	--output "c${CANVAS}_action.png" \
+	action
 
 echo "Generating age final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_age.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style age \
 	--screenshot \
-	--dst "c${CANVAS}_age.png"
+	--output "c${CANVAS}_age.png" \
+	age
 
 echo "Generating combined final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_combined.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style combined \
 	--screenshot \
-	--dst "c${CANVAS}_combined.png"
+	--output "c${CANVAS}_combined.png" \
+	combined
 
 echo "Generating minutes final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_minutes.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style minutes \
 	--screenshot \
-	--dst "c${CANVAS}_minutes.png"
+	--output "c${CANVAS}_minutes.png" \
+	minutes
 
 echo "Generating seconds final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_seconds.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style seconds \
 	--screenshot \
-	--dst "c${CANVAS}_seconds.png"
+	--output "c${CANVAS}_seconds.png" \
+	seconds
 
 echo "Generating milliseconds final image"
-pxlslog-explorer render \
-	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+pxlslog-render \
+	--quiet \
+	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_milliseconds.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--style milliseconds \
 	--screenshot \
-	--dst "c${CANVAS}_milliseconds.png"
+	--output "c${CANVAS}_milliseconds.png" \
+	milliseconds
