@@ -117,11 +117,11 @@ while [ $# -gt 0 ]; do
 			shift
 			shift
 			;;
-		--step=*)
+		--timescale=*)
 			TIMESCALE=$(echo $1 | sed -r s/^[^=]+=//)
 			shift
 			;;
-		--step)
+		--timescale)
 			if [[ $2 =~ ^-[A-Za-z-] ]]; then
 				echo "Expected a value for $1 and got $2"
 				exit 1
