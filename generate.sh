@@ -11,6 +11,7 @@ DEPENDENCIES=(
 	sed
 	printf
 	head
+	tail
 )
 
 for DEPENDENCY in ${DEPENDENCIES[@]}; do
