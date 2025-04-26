@@ -60,7 +60,7 @@ Mandatory arguments to long options are mandatory for short options too.
   -a, --authentication=TOKEN   set the bot detection bypass header
                                  see TOKEN below
       --timescale=TIMESCALE    set the speed multiplier of generated videos
-                                 default: 300
+                                 default: 9000
       --scale=SCALE            set the scale of generated vides
                                  default: 1
       --framerate=FRAMERATE    set the framerate of generated videos
@@ -233,6 +233,8 @@ elif [ $# -lt 1 ]; then
 	echo "Missing canvas argument"
 	exit 1
 fi
+
+STEP=$(($TIMESCALE * 1000 / $FRAMERATE))
 
 ENCODE=""
 
@@ -420,7 +422,7 @@ LAST_PIXEL=$(date --date="$(cat pixels.log | tail -n1 | awk -F "\t" '{print $1}'
 
 # canvas duration in milliseconds
 TIMESPAN=$(( ($LAST_PIXEL - $FIRST_PIXEL) / 1000000 ))
-APPROX_FRAMES=$(($TIMESPAN * $FRAMERATE / $TIMESCALE / 1000))
+APPROX_FRAMES=$(($TIMESPAN / $STEP))
 
 popd > /dev/null
 
@@ -445,7 +447,7 @@ esac
 KEYFRAME_INTERVAL=$((5 * $FRAMERATE))
 
 pxlslog-explorer render \
-	--step $(($TIMESCALE * 1000 / $FRAMERATE)) \
+	--step $STEP \
 	--step-type time \
 	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal_timelapse.png" \
@@ -473,7 +475,7 @@ SPACING=$(echo $APPROX_FRAMES | sed 's/./ /g')
 printf "\rGenerated normal timelapse        $SPACING $SPACING\n"
 
 pxlslog-explorer render \
-	--step $(($TIMESCALE * 1000 / $FRAMERATE)) \
+	--step $STEP \
 	--step-type time \
 	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_heat_timelapse.png" \
@@ -500,7 +502,7 @@ pxlslog-explorer render \
 printf "\rGenerated activity timelapse        $SPACING $SPACING\n"
 
 pxlslog-explorer render \
-	--step $(($TIMESCALE * 1000 / $FRAMERATE)) \
+	--step $STEP \
 	--step-type time \
 	--src "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin_timelapse.png" \
