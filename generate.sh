@@ -330,7 +330,7 @@ case $CANVAS in
 	46 | 47 | 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 | 58 | 59 | 60) PALETTE=palette_10 ;;
 	60a) PALETTE=palette_11 ;;
 	61 | 62 | 63 | 64 | 64a | 65 | 65a | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75) PALETTE=palette_12 ;;
-	76 | 77 | 78 | 78a | 79 | 80 | 81 | 82 | 83) PALETTE=palette_13 ;;
+	76 | 77 | 78 | 78a | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86 | 87 | 88 | 88a | 89) PALETTE=palette_13 ;;
 	21a) PALETTE=gimmick_1 ;;
 	30a) PALETTE=gimmick_2 ;;
 	56a) PALETTE=gimmick_3 ;;
