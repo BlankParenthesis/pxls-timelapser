@@ -1,59 +1,23 @@
 #!/usr/bin/bash
 
-if ! command -v pxlslog-explorer 2>&1 >/dev/null; then
-	echo "required program pxlslog-explorer not found"
-	exit 1
-fi
+DEPENDENCIES=(
+	pxlslog-explorer
+	curl
+	tar
+	magick
+	grep
+	awk
+	sed
+	printf
+	head
+)
 
-if ! command -v curl 2>&1 >/dev/null; then
-	echo "required program curl not found"
-	exit 1
-fi
-
-if ! command -v tar 2>&1 >/dev/null; then
-	echo "required program tar not found"
-	exit 1
-fi
-
-if ! command -v magick 2>&1 >/dev/null; then
-	echo "required program magick not found"
-	exit 1
-fi
-
-if ! command -v grep 2>&1 >/dev/null; then
-	echo "required program grep not found"
-	exit 1
-fi
-
-if ! command -v awk 2>&1 >/dev/null; then
-	echo "required program awk not found"
-	exit 1
-fi
-
-if ! command -v sed 2>&1 >/dev/null; then
-	echo "required program sed not found"
-	exit 1
-fi
-
-if ! command -v printf 2>&1 >/dev/null; then
-	echo "required program printf not found"
-	exit 1
-fi
-
-if ! command -v head 2>&1 >/dev/null; then
-	echo "required program head not found"
-	exit 1
-fi
-
-if ! command -v tail 2>&1 >/dev/null; then
-	echo "required program head not found"
-	exit 1
-fi
-
-if ! command -v date 2>&1 >/dev/null; then
-	echo "required program date not found"
-	exit 1
-fi
+for DEPENDENCY in ${DEPENDENCIES[@]}; do
+	if ! command -v $DEPENDENCY 2>&1 >/dev/null; then
+		echo "required program $DEPENDENCY not found"
+		exit 1
+	fi
+done
 
 OUTPUT=.
 AUTHENTICATION=""
