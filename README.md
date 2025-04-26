@@ -8,6 +8,7 @@ Specifically, this script works with the `dev` branch as of commit `f37930ce` an
 Instructions for building are not provided here, but once you have the binary you will need rename it to `pxlslog-render` and to place it somewhere in your path (such as `~/.local/bin/pxlslog-render` or `/usr/share/bin/pxlslog-render`).
 
 You will also need the following GNU and common programs installed:
+- `ffmpeg`
 - `curl`
 - `tar`
 - `magick`

@@ -3,6 +3,7 @@
 HAS_DEPENDENCIES=true
 DEPENDENCIES=(
 	pxlslog-render
+	ffmpeg
 	curl
 	tar
 	magick
