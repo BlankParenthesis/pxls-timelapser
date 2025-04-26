@@ -537,7 +537,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_activity.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_heat.png" \
+	--output "c${CANVAS}_heat_0.png" \
 	activity
 
 echo "Generating virgin final image"
@@ -547,7 +547,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_virgin.png" \
+	--output "c${CANVAS}_virgin_0.png" \
 	virgin
 
 echo "Generating action final image"
@@ -557,7 +557,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_action.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_action.png" \
+	--output "c${CANVAS}_action_0.png" \
 	action
 
 echo "Generating age final image"
@@ -567,7 +567,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_age.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_age.png" \
+	--output "c${CANVAS}_age_0.png" \
 	age
 
 echo "Generating combined final image"
@@ -577,7 +577,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_combined.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_combined.png" \
+	--output "c${CANVAS}_combined_0.png" \
 	combined
 
 echo "Generating minutes final image"
@@ -587,7 +587,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_minutes.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_minutes.png" \
+	--output "c${CANVAS}_minutes_0.png" \
 	minutes
 
 echo "Generating seconds final image"
@@ -597,7 +597,7 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_seconds.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_seconds.png" \
+	--output "c${CANVAS}_seconds_0.png" \
 	seconds
 
 echo "Generating milliseconds final image"
@@ -607,5 +607,5 @@ pxlslog-render \
 	--bg "$CACHE_DIR/canvas/$CANVAS/initial_milliseconds.png" \
 	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
 	--screenshot \
-	--output "c${CANVAS}_milliseconds.png" \
+	--output "c${CANVAS}_milliseconds_0.png" \
 	milliseconds
