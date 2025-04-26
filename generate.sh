@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+HAS_DEPENDENCIES=true
 DEPENDENCIES=(
 	pxlslog-explorer
 	curl
@@ -15,9 +16,13 @@ DEPENDENCIES=(
 for DEPENDENCY in ${DEPENDENCIES[@]}; do
 	if ! command -v $DEPENDENCY 2>&1 >/dev/null; then
 		echo "required program $DEPENDENCY not found"
-		exit 1
+		HAS_DEPENDENCIES=false
 	fi
 done
+
+if [ $HAS_DEPENDENCIES = false ]; then
+	exit 1
+fi
 
 OUTPUT=.
 AUTHENTICATION=""
