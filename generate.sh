@@ -13,6 +13,8 @@ DEPENDENCIES=(
 	printf
 	head
 	tail
+	optipng
+	numfmt
 )
 
 for DEPENDENCY in ${DEPENDENCIES[@]}; do
@@ -34,6 +36,7 @@ FRAMERATE=30
 CODEC=h264
 QUALITY=medium
 POSITIONAL_ARGS=()
+OPTIMIZE=true
 
 usage () {
 	cat << EOF
@@ -55,6 +58,7 @@ Mandatory arguments to long options are mandatory for short options too.
                                  see CODEC below
       --quality=QUALITY        set the quality of generated videos
                                  see QUALITY below
+      --skip-optimization      do not run optipng on outputted images
   -h, --help                   display this help and exit
   
 TOKEN is a unique value provided to you directly by pxls' staff. To obtain
@@ -166,6 +170,10 @@ while [ $# -gt 0 ]; do
 			fi
 			QUALITY=$2
 			shift
+			shift
+			;;
+		--skip-optimization)
+			OPTIMIZE=false
 			shift
 			;;
 		-*|--*)
@@ -610,3 +618,29 @@ pxlslog-render \
 	--screenshot \
 	--output "c${CANVAS}_milliseconds_0.png" \
 	milliseconds
+
+optimize() {
+	printf "Optimizing $1…"
+	local SIZES=( $(optipng $1 2>&1 | grep "file size" | awk -F ' ' '{print $5}') );
+	local SPACING="$(echo $1 | sed "s/./ /")"
+	printf "\r           $SPACING \r"
+	if [ ${#SIZES[@]} = 2 ]; then
+		local FROM="$(numfmt ${SIZES[0]} --suffix=B --to=iec-i)"
+		local TO="$(numfmt ${SIZES[1]} --suffix=B --to=iec-i)"
+		echo "Optimized $1: $FROM → $TO"
+	else
+		echo "Unexpected optipng output when optimizing $1"
+	fi
+}
+
+if [ $OPTIMIZE = true ]; then
+	optimize "c${CANVAS}_action_0.png"
+	optimize "c${CANVAS}_age_0.png"
+	optimize "c${CANVAS}_combined_0.png"
+	optimize "c${CANVAS}_heat_0.png"
+	optimize "c${CANVAS}_milliseconds_0.png"
+	optimize "c${CANVAS}_minutes_0.png"
+	optimize "c${CANVAS}_seconds_0.png"
+	optimize "c${CANVAS}_virgin_0.png"
+	optimize "canvas-${CANVAS}-final.png"
+fi

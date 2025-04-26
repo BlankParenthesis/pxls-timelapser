@@ -18,6 +18,8 @@ You will also need the following GNU and common programs installed:
 - `printf`
 - `head`
 - `tail`
+- `optipng`
+- `numfmt`
 
 The script will check this for you and inform you about missing programs.
 
@@ -69,3 +71,5 @@ Set the quality of generated videos.
 `QUALITY` can be: low, medium (default), high, or lossless.
 Note that vp9 does not support 444 chrome subsampling and "lossless" will not
 produce a truly lossless output when it is used as a codec.
+#### Skip Optimization (`--skip-optimization`)
+Do not run optipng on outputted images.
