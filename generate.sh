@@ -87,7 +87,7 @@ while [ $# -gt 0 ]; do
 			shift
 			;;
 		--authentication=*)
-			OUTPUT=$(echo $1 | sed -r s/^[^=]+=//)
+			AUTHENTICATION=$(echo $1 | sed -r s/^[^=]+=//)
 			shift
 			;;
 		-a | --authentication)
@@ -155,7 +155,7 @@ while [ $# -gt 0 ]; do
 			shift
 			;;
 		--quality=*)
-		QUALITY=$(echo $1 | sed -r s/^[^=]+=//)
+			QUALITY=$(echo $1 | sed -r s/^[^=]+=//)
 			shift
 			;;
 		--quality)
