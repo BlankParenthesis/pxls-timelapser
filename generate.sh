@@ -40,6 +40,21 @@ if ! command -v printf 2>&1 >/dev/null; then
 	exit 1
 fi
 
+if ! command -v head 2>&1 >/dev/null; then
+	echo "required program head not found"
+	exit 1
+fi
+
+if ! command -v tail 2>&1 >/dev/null; then
+	echo "required program head not found"
+	exit 1
+fi
+
+if ! command -v date 2>&1 >/dev/null; then
+	echo "required program date not found"
+	exit 1
+fi
+
 OUTPUT=.
 AUTHENTICATION=""
 TIMESCALE=9000
