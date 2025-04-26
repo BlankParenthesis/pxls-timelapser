@@ -411,6 +411,7 @@ TIMESPAN=$(( ($LAST_PIXEL - $FIRST_PIXEL) / 1000000 ))
 APPROX_FRAMES=$(($TIMESPAN / $STEP))
 
 popd > /dev/null
+pushd "$OUTPUT" > /dev/null
 
 FILTERS=""
 CONTAINER=""
