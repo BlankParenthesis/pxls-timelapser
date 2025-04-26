@@ -2,7 +2,7 @@
 
 HAS_DEPENDENCIES=true
 DEPENDENCIES=(
-	pxlslog-explorer
+	pxlslog-render
 	curl
 	tar
 	magick
