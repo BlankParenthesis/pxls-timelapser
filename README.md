@@ -27,8 +27,14 @@ See [Parameters](#Parameters) or use `--help` for more configuration options.
 ### Error 403 when downloading logs
 Since [Pxls](https://pxls.space) currently has automated request protection in place, it is highly likely that the automatic downloading of logs and palettes will be blocked with a 403 response from the server.
 If you have a developer token for pxls, you can provide it with the `--authentication` (`-a`) parameter.
-Otherwise, you can manually download the [canvas logs](https://pxls.space/extra/logs/) to `~/.cache/pxls-timelapser/canvas/<canvas name>/logs.tar.xz` and [palettes](https://pxls.space/extra/palette/) to `~/.cache/pxls-timelapser/palette/<palette_name>.gpl`.
+Otherwise, you can manually download the required files yourself:
+- Save [canvas logs](https://pxls.space/extra/logs/) to `~/.cache/pxls-timelapser/canvas/<canvas name>/logs.tar.xz`
+- Save initial canvas images from the [archives](https://archives.pxls.space) to `~/.cache/pxls-timelapser/canvas/<canvas name>/initial_normal.png`
+- Save [palettes](https://pxls.space/extra/palette/) to `~/.cache/pxls-timelapser/palette/<palette_name>.gpl`
+
 The location may differ depending on the value of `$XDG_CACHE_DIR`.
+
+Once you have placed these three files in the correct location for a canvas, the script should then be able to proceed without any network usage.
 
 ### Parameters
 #### Output (`-o`, `--output=<DIRECTORY>`)
