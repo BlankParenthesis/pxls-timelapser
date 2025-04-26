@@ -18,6 +18,7 @@ You will also need the following GNU and common programs installed:
 - `printf`
 - `head`
 - `tail`
+- `date`
 - `optipng`
 - `numfmt`
 

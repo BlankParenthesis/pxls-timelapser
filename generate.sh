@@ -13,6 +13,7 @@ DEPENDENCIES=(
 	printf
 	head
 	tail
+	date
 	optipng
 	numfmt
 )
