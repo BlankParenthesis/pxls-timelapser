@@ -36,6 +36,8 @@ FRAMERATE=30
 CODEC=h264
 QUALITY=medium
 POSITIONAL_ARGS=()
+VIDEOS=true
+IMAGES=true
 OPTIMIZE=true
 
 usage () {
@@ -58,7 +60,9 @@ Mandatory arguments to long options are mandatory for short options too.
                                  see CODEC below
       --quality=QUALITY        set the quality of generated videos
                                  see QUALITY below
-      --skip-optimization      do not run optipng on outputted images
+      --skip-videos            skip generating timelapse videos
+      --skip-images            skip generating final images
+      --skip-optimization      skip running optipng on outputted images
   -h, --help                   display this help and exit
   
 TOKEN is a unique value provided to you directly by pxls' staff. To obtain
@@ -170,6 +174,14 @@ while [ $# -gt 0 ]; do
 			fi
 			QUALITY=$2
 			shift
+			shift
+			;;
+		--skip-videos)
+			VIDEOS=false
+			shift
+			;;
+		--skip-images)
+			IMAGES=false
 			shift
 			;;
 		--skip-optimization)
@@ -441,206 +453,210 @@ esac
 
 KEYFRAME_INTERVAL=$((5 * $FRAMERATE))
 
-pxlslog-render \
-	--quiet \
-	--step $STEP \
-	--step-type time \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal_timelapse.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--output-format rgba \
-	normal | ffmpeg \
-		-hide_banner \
-		-loglevel error \
-		-progress pipe:1 \
-		-nostats \
-		-nostdin \
-		-y \
-		-f rawvideo \
-		-pixel_format rgba \
-		-video_size $SIZE \
-		-r $FRAMERATE \
-		-i pipe:0 \
-		$ENCODE \
-		-g $KEYFRAME_INTERVAL \
-		$FILTERS \
-		"c${CANVAS}_timelapse_normal.$CONTAINER" \
-		| grep --line-buffered ^frame= \
-		| awk -F '=' "{printf \"\rGenerating normal timelapse frame %s/$APPROX_FRAMES\", \$2}"
-
-SPACING=$(echo $APPROX_FRAMES | sed 's/./ /g')
-printf "\rGenerated normal timelapse        $SPACING $SPACING\n"
-
-pxlslog-render \
-	--quiet \
-	--step $STEP \
-	--step-type time \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_heat_timelapse.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--output-format rgba \
-	heat | ffmpeg \
-		-hide_banner \
-		-loglevel error \
-		-progress pipe:1 \
-		-nostats \
-		-nostdin \
-		-y \
-		-f rawvideo \
-		-pixel_format rgba \
-		-video_size $SIZE \
-		-r $FRAMERATE \
-		-i pipe:0 \
-		$ENCODE \
-		-g $KEYFRAME_INTERVAL \
-		$FILTERS \
-		"c${CANVAS}_timelapse_activity.$CONTAINER" \
-		| grep --line-buffered ^frame= \
-		| awk -F '=' "{printf \"\rGenerating activity timelapse frame %s/$APPROX_FRAMES\", \$2}"
-
-printf "\rGenerated activity timelapse        $SPACING $SPACING\n"
-
-pxlslog-render \
-	--quiet \
-	--step $STEP \
-	--step-type time \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin_timelapse.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--output-format rgba \
-	virgin | ffmpeg \
-		-hide_banner \
-		-loglevel error \
-		-progress pipe:1 \
-		-nostats \
-		-nostdin \
-		-y \
-		-f rawvideo \
-		-pixel_format rgba \
-		-video_size $SIZE \
-		-r $FRAMERATE \
-		-i pipe:0 \
-		$ENCODE \
-		-g $KEYFRAME_INTERVAL \
-		$FILTERS \
-		"c${CANVAS}_timelapse_virgin.$CONTAINER" \
-		| grep --line-buffered ^frame= \
-		| awk -F '=' "{printf \"\rGenerating virgin timelapse frame %s/$APPROX_FRAMES\", \$2}"
-
-printf "\rGenerated timelapse timelapse        $SPACING $SPACING\n"
-
-echo "Generating normal final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "canvas-${CANVAS}-final.png" \
-	normal
-
-echo "Generating activity final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_activity.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_heat_0.png" \
-	activity
-
-echo "Generating virgin final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_virgin_0.png" \
-	virgin
-
-echo "Generating action final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_action.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_action_0.png" \
-	action
-
-echo "Generating age final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_age.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_age_0.png" \
-	age
-
-echo "Generating combined final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_combined.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_combined_0.png" \
-	combined
-
-echo "Generating minutes final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_minutes.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_minutes_0.png" \
-	minutes
-
-echo "Generating seconds final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_seconds.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_seconds_0.png" \
-	seconds
-
-echo "Generating milliseconds final image"
-pxlslog-render \
-	--quiet \
-	--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
-	--bg "$CACHE_DIR/canvas/$CANVAS/initial_milliseconds.png" \
-	--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
-	--screenshot \
-	--output "c${CANVAS}_milliseconds_0.png" \
-	milliseconds
-
-optimize() {
-	printf "Optimizing $1…"
-	local SIZES=( $(optipng $1 2>&1 | grep "file size" | awk -F ' ' '{print $5}') );
-	local SPACING="$(echo $1 | sed "s/./ /")"
-	printf "\r           $SPACING \r"
-	if [ ${#SIZES[@]} = 2 ]; then
-		local FROM="$(numfmt ${SIZES[0]} --suffix=B --to=iec-i)"
-		local TO="$(numfmt ${SIZES[1]} --suffix=B --to=iec-i)"
-		echo "Optimized $1: $FROM → $TO"
-	else
-		echo "Unexpected optipng output when optimizing $1"
+if [ $VIDEOS = true ]; then
+	pxlslog-render \
+		--quiet \
+		--step $STEP \
+		--step-type time \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal_timelapse.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--output-format rgba \
+		normal | ffmpeg \
+			-hide_banner \
+			-loglevel error \
+			-progress pipe:1 \
+			-nostats \
+			-nostdin \
+			-y \
+			-f rawvideo \
+			-pixel_format rgba \
+			-video_size $SIZE \
+			-r $FRAMERATE \
+			-i pipe:0 \
+			$ENCODE \
+			-g $KEYFRAME_INTERVAL \
+			$FILTERS \
+			"c${CANVAS}_timelapse_normal.$CONTAINER" \
+			| grep --line-buffered ^frame= \
+			| awk -F '=' "{printf \"\rGenerating normal timelapse frame %s/$APPROX_FRAMES\", \$2}"
+	
+	SPACING=$(echo $APPROX_FRAMES | sed 's/./ /g')
+	printf "\rGenerated normal timelapse        $SPACING $SPACING\n"
+	
+	pxlslog-render \
+		--quiet \
+		--step $STEP \
+		--step-type time \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_heat_timelapse.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--output-format rgba \
+		heat | ffmpeg \
+			-hide_banner \
+			-loglevel error \
+			-progress pipe:1 \
+			-nostats \
+			-nostdin \
+			-y \
+			-f rawvideo \
+			-pixel_format rgba \
+			-video_size $SIZE \
+			-r $FRAMERATE \
+			-i pipe:0 \
+			$ENCODE \
+			-g $KEYFRAME_INTERVAL \
+			$FILTERS \
+			"c${CANVAS}_timelapse_activity.$CONTAINER" \
+			| grep --line-buffered ^frame= \
+			| awk -F '=' "{printf \"\rGenerating activity timelapse frame %s/$APPROX_FRAMES\", \$2}"
+	
+	printf "\rGenerated activity timelapse        $SPACING $SPACING\n"
+	
+	pxlslog-render \
+		--quiet \
+		--step $STEP \
+		--step-type time \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin_timelapse.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--output-format rgba \
+		virgin | ffmpeg \
+			-hide_banner \
+			-loglevel error \
+			-progress pipe:1 \
+			-nostats \
+			-nostdin \
+			-y \
+			-f rawvideo \
+			-pixel_format rgba \
+			-video_size $SIZE \
+			-r $FRAMERATE \
+			-i pipe:0 \
+			$ENCODE \
+			-g $KEYFRAME_INTERVAL \
+			$FILTERS \
+			"c${CANVAS}_timelapse_virgin.$CONTAINER" \
+			| grep --line-buffered ^frame= \
+			| awk -F '=' "{printf \"\rGenerating virgin timelapse frame %s/$APPROX_FRAMES\", \$2}"
+	
+	printf "\rGenerated timelapse timelapse        $SPACING $SPACING\n"
+fi
+	
+if [ $IMAGES = true ]; then
+	echo "Generating normal final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_normal.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "canvas-${CANVAS}-final.png" \
+		normal
+	
+	echo "Generating activity final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_activity.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_heat_0.png" \
+		activity
+	
+	echo "Generating virgin final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_virgin.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_virgin_0.png" \
+		virgin
+	
+	echo "Generating action final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_action.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_action_0.png" \
+		action
+	
+	echo "Generating age final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_age.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_age_0.png" \
+		age
+	
+	echo "Generating combined final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_combined.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_combined_0.png" \
+		combined
+	
+	echo "Generating minutes final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_minutes.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_minutes_0.png" \
+		minutes
+	
+	echo "Generating seconds final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_seconds.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_seconds_0.png" \
+		seconds
+	
+	echo "Generating milliseconds final image"
+	pxlslog-render \
+		--quiet \
+		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
+		--bg "$CACHE_DIR/canvas/$CANVAS/initial_milliseconds.png" \
+		--palette "$CACHE_DIR/palette/$PALETTE.gpl" \
+		--screenshot \
+		--output "c${CANVAS}_milliseconds_0.png" \
+		milliseconds
+	
+	optimize() {
+		printf "Optimizing $1…"
+		local SIZES=( $(optipng $1 2>&1 | grep "file size" | awk -F ' ' '{print $5}') );
+		local SPACING="$(echo $1 | sed "s/./ /")"
+		printf "\r           $SPACING \r"
+		if [ ${#SIZES[@]} = 2 ]; then
+			local FROM="$(numfmt ${SIZES[0]} --suffix=B --to=iec-i)"
+			local TO="$(numfmt ${SIZES[1]} --suffix=B --to=iec-i)"
+			echo "Optimized $1: $FROM → $TO"
+		else
+			echo "Unexpected optipng output when optimizing $1"
+		fi
+	}
+	
+	if [ $OPTIMIZE = true ]; then
+		optimize "c${CANVAS}_action_0.png"
+		optimize "c${CANVAS}_age_0.png"
+		optimize "c${CANVAS}_combined_0.png"
+		optimize "c${CANVAS}_heat_0.png"
+		optimize "c${CANVAS}_milliseconds_0.png"
+		optimize "c${CANVAS}_minutes_0.png"
+		optimize "c${CANVAS}_seconds_0.png"
+		optimize "c${CANVAS}_virgin_0.png"
+		optimize "canvas-${CANVAS}-final.png"
 	fi
-}
-
-if [ $OPTIMIZE = true ]; then
-	optimize "c${CANVAS}_action_0.png"
-	optimize "c${CANVAS}_age_0.png"
-	optimize "c${CANVAS}_combined_0.png"
-	optimize "c${CANVAS}_heat_0.png"
-	optimize "c${CANVAS}_milliseconds_0.png"
-	optimize "c${CANVAS}_minutes_0.png"
-	optimize "c${CANVAS}_seconds_0.png"
-	optimize "c${CANVAS}_virgin_0.png"
-	optimize "canvas-${CANVAS}-final.png"
 fi

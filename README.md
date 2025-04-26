@@ -71,5 +71,9 @@ Set the quality of generated videos.
 `QUALITY` can be: low, medium (default), high, or lossless.
 Note that vp9 does not support 444 chrome subsampling and "lossless" will not
 produce a truly lossless output when it is used as a codec.
+#### Skip Images (`--skip-images`)
+Skip generating timelapse videos.
+#### Skip Videos (`--skip-videos`)
+Skip generating final images.
 #### Skip Optimization (`--skip-optimization`)
-Do not run optipng on outputted images.
+Skip running optipng on outputted images.
