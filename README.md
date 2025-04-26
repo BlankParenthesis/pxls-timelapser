@@ -3,7 +3,7 @@ A bash script for generating timelapses and final images of [Pxls](https://pxls.
 
 ## Prerequisites
 You will need to build or acquire a build of [PxlsLog-Explorer](https://github.com/Etos2/pxlslog-explorer) to make use of this.
-Specifically, this script works with the `dev` branch as of commit `f37930ce`.
+Specifically, this script works with the `dev` branch as of commit `f37930ce` and the `render` binary (compared to the `filter` binary).
 
 Instructions for building are not provided here, but once you have the binary you will need rename it to `pxlslog-render` and to place it somewhere in your path (such as `~/.local/bin/pxlslog-render` or `/usr/share/bin/pxlslog-render`).
 
