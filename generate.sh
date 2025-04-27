@@ -77,6 +77,21 @@ produce a truly lossless output when it is used as a codec.
 EOF
 }
 
+# strips the part before and including "=" in an key=value pair
+strip_key() {
+	echo $1 | sed -r s/^[^=]+=//
+}
+
+# will throw an error if the second argument looks like a parameter 
+verify_value() {
+	# match parameter-like text ("-p", "--param", etc)
+	if [[ "$2" =~ ^-[A-Za-z-] ]]; then
+		echo "Expected a value for $1 and got $2"
+		exit 1
+	fi
+	echo "$2"
+}
+
 while [ $# -gt 0 ]; do
 	case $1 in
 		-h | --help)
@@ -84,110 +99,66 @@ while [ $# -gt 0 ]; do
 			exit 0
 			;;
 		--output=*)
-			OUTPUT=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			OUTPUT=$(strip_key $1)
 			;;
 		-o | --output)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			fi
-			OUTPUT=$2
-			shift
+			OUTPUT=$(verify_value $1 $2)
 			shift
 			;;
 		--authentication=*)
-			AUTHENTICATION=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			AUTHENTICATION=$(strip_key $1)
 			;;
 		-a | --authentication)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			elif [ -z $2 ]; then
+			if [ -z $2 ]; then
 				echo "Missing value for authentication"
 				exit 1
 			fi
-			AUTHENTICATION=$2
-			shift
+			AUTHENTICATION=$(verify_value $1 $2)
 			shift
 			;;
 		--timescale=*)
-			TIMESCALE=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			TIMESCALE=$(strip_key $1)
 			;;
 		--timescale)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			fi
-			TIMESCALE=$2
-			shift
+			TIMESCALE=$(verify_value $1 $2)
 			shift
 			;;
 		--scale=*)
-			SCALE=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			SCALE=$(strip_key $1)
 			;;
 		--scale)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			fi
-			SCALE=$2
-			shift
+			SCALE=$(verify_value $1 $2)
 			shift
 			;;
 		--framerate=*)
-			FRAMERATE=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			FRAMERATE=$(strip_key $1)
 			;;
 		--framerate)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			fi
-			FRAMERATE=$2
-			shift
+			FRAMERATE=$(verify_value $1 $2)
 			shift
 			;;
 		--codec=*)
-			CODEC=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			CODEC=$(strip_key $1)
 			;;
 		--codec)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			fi
-			CODEC=$2
-			shift
+			CODEC=$(verify_value $1 $2)
 			shift
 			;;
 		--quality=*)
-			QUALITY=$(echo $1 | sed -r s/^[^=]+=//)
-			shift
+			QUALITY=$(strip_key $1)
 			;;
 		--quality)
-			if [[ $2 =~ ^-[A-Za-z-] ]]; then
-				echo "Expected a value for $1 and got $2"
-				exit 1
-			fi
-			QUALITY=$2
-			shift
+			QUALITY=$(verify_value $1 $2)
 			shift
 			;;
 		--skip-videos)
 			VIDEOS=false
-			shift
 			;;
 		--skip-images)
 			IMAGES=false
-			shift
 			;;
 		--skip-optimization)
 			OPTIMIZE=false
-			shift
 			;;
 		-*|--*)
 			echo "Unknown option $1"
@@ -195,9 +166,9 @@ while [ $# -gt 0 ]; do
 			;;
 		*)
 			POSITIONAL_ARGS+=("$1")
-			shift
 			;;
 	esac
+	shift
 done
 
 # restore positional parameters
