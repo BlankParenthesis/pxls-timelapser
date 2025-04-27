@@ -358,42 +358,35 @@ SIZE=$(identify initial_normal.png | awk -F ' ' '{print $3}')
 WIDTH=$(echo $SIZE | awk -F 'x' '{print $1}')
 HEIGHT=$(echo $SIZE | awk -F 'x' '{print $2}')
 
-if ! [ -f initial_heat.png ]; then
-	magick -size $SIZE xc:#000000 initial_heat.png
-fi
-if ! [ -f initial_activity.png ]; then
-	magick -size $SIZE xc:#000000 initial_activity.png
-fi
-if ! [ -f initial_virgin.png ]; then
-	magick -size $SIZE xc:#00FF00 initial_virgin.png
-fi
-if ! [ -f initial_action.png ]; then
-	magick -size $SIZE xc:#FFFFFF initial_action.png
-fi
-if ! [ -f initial_age.png ]; then
-	magick -size $SIZE xc:#FFFFFF initial_age.png
-fi
-if ! [ -f initial_combined.png ]; then
-	magick -size $SIZE xc:#FFFFFF initial_combined.png
-fi
-if ! [ -f initial_minutes.png ]; then
-	magick -size $SIZE xc:#FFFFFF initial_minutes.png
-fi
-if ! [ -f initial_seconds.png ]; then
-	magick -size $SIZE xc:#FFFFFF initial_seconds.png
-fi
-if ! [ -f initial_milliseconds.png ]; then
-	magick -size $SIZE xc:#FFFFFF initial_milliseconds.png
-fi
-if ! [ -f initial_normal_timelapse.png ]; then
-	magick initial_normal.png -fill white -opaque none initial_normal_timelapse.png
-fi
-if ! [ -f initial_heat_timelapse.png ]; then
-	magick initial_heat.png -fill black -opaque none initial_heat_timelapse.png
-fi
-if ! [ -f initial_virgin_timelapse.png ]; then
-	magick initial_virgin.png -fill black -opaque none initial_virgin_timelapse.png
-fi
+generate_initial() {
+	FILE="initial_${1}.png"
+	COLOR="xc:$2"
+	if ! [ -f "$FILE" ]; then
+		magick -size "$SIZE" "$COLOR" "$FILE"
+	fi
+}
+
+generate_initial_timelapse() {
+	FILE="initial_${1}_timelapse.png"
+	COLOR="$2"
+	if ! [ -f "$FILE" ]; then
+		magick initial_${1}.png -fill "$COLOR" -opaque none "$FILE"
+	fi
+}
+
+generate_initial heat "#000000"
+generate_initial activity "#000000"
+generate_initial virgin "#00FF00"
+generate_initial action "#FFFFFF"
+generate_initial age "#FFFFFF"
+generate_initial combined "#FFFFFF"
+generate_initial minutes "#FFFFFF"
+generate_initial seconds "#FFFFFF"
+generate_initial milliseconds "#FFFFFF"
+
+generate_initial_timelapse normal white
+generate_initial_timelapse heat black
+generate_initial_timelapse virgin black
 
 FIRST_PIXEL=$(date --date="$(cat pixels.log | head -n1 | awk -F "\t" '{print $1}')" +%s%N)
 LAST_PIXEL=$(date --date="$(cat pixels.log | tail -n1 | awk -F "\t" '{print $1}')" +%s%N)
