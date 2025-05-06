@@ -421,6 +421,12 @@ KEYFRAME_INTERVAL=$((5 * $FRAMERATE))
 timelapse() {
 	local SPACING=$(echo $APPROX_FRAMES | sed 's/./ /g')
 
+	local FILE="c${CANVAS}_timelapse_${1}.$CONTAINER"
+
+	if [ $1 = "heat" ]; then
+		FILE="c${CANVAS}_timelapse_activity.$CONTAINER"
+	fi
+
 	printf "Generating $1 timelapse…"
 
 	pxlslog-render \
@@ -446,7 +452,7 @@ timelapse() {
 			$ENCODE \
 			-g $KEYFRAME_INTERVAL \
 			$FILTERS \
-			"c${CANVAS}_timelapse_${1}.$CONTAINER" \
+			"$FILE" \
 			| grep --line-buffered ^frame= \
 			| awk -F '=' "{printf \"\rGenerating $1 timelapse frame %s/$APPROX_FRAMES\", \$2}"
 
@@ -503,6 +509,7 @@ optimize() {
 if [ $IMAGES = true ]; then
 	final_image normal
 	final_image activity
+	final_image heat
 	final_image virgin
 	final_image action
 	final_image age
