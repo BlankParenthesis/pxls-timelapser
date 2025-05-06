@@ -241,7 +241,7 @@ case $CODEC in
 				;;
 		esac
 		;;
-		
+
 	vp9)
 		case $QUALITY in
 			low)      ENCODE="-c:v libvpx-vp9 -cpu-used 2 -crf 48" ;;
@@ -420,9 +420,9 @@ KEYFRAME_INTERVAL=$((5 * $FRAMERATE))
 
 timelapse() {
 	local SPACING=$(echo $APPROX_FRAMES | sed 's/./ /g')
-	
+
 	printf "Generating $1 timelapse…"
-		
+
 	pxlslog-render \
 		--quiet \
 		--step $STEP \
@@ -449,7 +449,7 @@ timelapse() {
 			"c${CANVAS}_timelapse_${1}.$CONTAINER" \
 			| grep --line-buffered ^frame= \
 			| awk -F '=' "{printf \"\rGenerating $1 timelapse frame %s/$APPROX_FRAMES\", \$2}"
-	
+
 	printf "\rGenerated $1 timelapse        $SPACING $SPACING\n"
 }
 
@@ -461,13 +461,13 @@ fi
 
 final_image() {
 	local FILE="c${CANVAS}_${1}_0.png"
-	
-	if [ $1 = "normal" ]; then 
+
+	if [ $1 = "normal" ]; then
 		FILE="canvas-${CANVAS}-final.png"
 	fi
-	
+
 	printf "Generating $1 final image"
-	
+
 	pxlslog-render \
 		--quiet \
 		--log "$CACHE_DIR/canvas/$CANVAS/pixels.log" \
@@ -476,18 +476,18 @@ final_image() {
 		--screenshot \
 		--output "$FILE" \
 		$1
-	
+
 	printf "\rGenerated $1 final image \n"
 }
 
 optimize() {
 	printf "Optimizing $1…"
 	local FILE="c${CANVAS}_${1}_0.png"
-	
-	if [ $1 = "normal" ]; then 
+
+	if [ $1 = "normal" ]; then
 		FILE="canvas-${CANVAS}-final.png"
 	fi
-	
+
 	local SIZES=( $(optipng $FILE 2>&1 | grep "file size" | awk -F ' ' '{print $5}') );
 	local SPACING="$(echo $FILE | sed "s/./ /")"
 	printf "\r           $SPACING \r"
@@ -510,7 +510,7 @@ if [ $IMAGES = true ]; then
 	final_image minutes
 	final_image seconds
 	final_image milliseconds
-	
+
 	if [ $OPTIMIZE = true ]; then
 		optimize normal
 		optimize activity
